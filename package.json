@@ -2,6 +2,14 @@
   "name": "relax-background",
   "version": "1.0.0",
   "scripts": {
+    "start": "npm-run-all build serve",
+    "dev": "parcel",
+    "build": "parcel build",
+    "serve": "http-server dist/",
+    "lint:scripts": "eslint \"src/**/*.js\" --fix",
+    "lint:styles": "stylelint 'src/**/*.scss' --fix",
+    "format": "prettier --write \"src/**/*.{scss,js,html}\" \"*.md\"",
+    "clear": "rm -rf .parcel-cache dist",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -25,5 +33,12 @@
     "stylelint": "16.17.0",
     "stylelint-config-standard-scss": "14.0.0",
     "stylelint-prettier": "5.0.3"
+  },
+  "source": "src/index.pug",
+  "@parcel/transformer-css": {
+    "drafts": {
+      "customMedia": true,
+      "nesting": false
+    }
   }
 }

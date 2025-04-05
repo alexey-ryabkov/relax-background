@@ -1,0 +1,21 @@
+{
+  "extends": [
+    "stylelint-config-standard-scss",
+    "stylelint-prettier/recommended"
+  ],
+  "plugins": ["stylelint-prettier"],
+  "rules": {
+    "prettier/prettier": [true, { "severity": "warning" }],
+    "custom-property-empty-line-before": null,
+    "no-descending-specificity": null,
+    "scss/dollar-variable-empty-line-before": null,
+    "scss/double-slash-comment-empty-line-before": null,
+    "selector-class-pattern": [
+      "^_?[$]?[a-z0-9]+(-[a-z0-9]+)*(__[$]?[a-z0-9]+(-[a-z0-9]+)*)?(_[$]?[a-z0-9]+(-[a-z0-9]+)*)?$",
+      {
+        "severity": "warning",
+        "resolveNestedSelectors": true
+      }
+    ]
+  }
+}
