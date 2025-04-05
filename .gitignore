@@ -1,0 +1,8 @@
+.DS_STORE
+.vscode/*
+!.vscode/*.example.json
+.parcel-cache
+node_modules
+dist
+*bckp*
+tmp
