@@ -1,0 +1,16 @@
+doctype html
+html(lang='ru')
+  head
+    //- title #{ title }
+    title Relaxing background player
+    meta(name='viewport', content='width=device-width, initial-scale=1')/
+    meta(name='theme-color', content='#000000')/
+    //- link(rel='icon' type='image/png' href='images/favicon.png')/
+    link(href='assets/css/fontawesome.min.css', rel='stylesheet')/
+    link(href='assets/css/fa-regular.min.css', rel='stylesheet')/
+    link(href='assets/css/fa-solid.min.css', rel='stylesheet')/
+    link(href='css/index.scss', rel='stylesheet')/
+    script(src='main.js', type='module')
+  body
+    include components/visualizer/tmpl
+    include components/player/tmpl
