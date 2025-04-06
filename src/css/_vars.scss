@@ -1,6 +1,8 @@
 $white: #fff;
 $black: #000;
 
+$rem-size: 16px;
+
 $layout-breakpoints: (
   min: 360px,
   sm: 576px,
@@ -8,3 +10,12 @@ $layout-breakpoints: (
   lg: 992px,
   xl: 1200px,
 );
+
+$font-txt-family: 'Rubik';
+$font-txt-weights: (
+  'light': 300,
+  'regular': 400,
+  'medium': 500,
+  'semiBold': 600,
+);
+$font-accent-family: 'RubikMonoOne';

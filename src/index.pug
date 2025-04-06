@@ -11,6 +11,17 @@ html(lang='ru')
     link(href='assets/css/fa-solid.min.css', rel='stylesheet')/
     link(href='css/index.scss', rel='stylesheet')/
     script(src='main.js', type='module')
-  body
-    include components/visualizer/tmpl
-    include components/player/tmpl
+  body.page
+    header.page__header
+      .page__logo
+        | Relax
+        |
+        div.page__logo-accent 
+          | Background  
+    main.page__workarea
+      include components/visualizer/tmpl
+      include components/player/tmpl
+    footer.page__footer
+      a(
+        href='https://github.com/alexey-ryabkov/relax-background?tab=readme-ov-file'
+      ) О проекте

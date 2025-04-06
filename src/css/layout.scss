@@ -1,0 +1,76 @@
+@use 'sass:map';
+@use 'vars' as *;
+@use 'utils';
+
+html {
+  height: 100%;
+}
+
+body {
+  min-height: map.get($layout-breakpoints, min);
+  font: $rem-size $font-txt-family;
+  color: $white;
+}
+
+.page {
+  $header-height: 10rem;
+  $footer-height: 4rem;
+
+  min-height: 100%;
+
+  @include utils.box-stack;
+
+  &::before {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  &__header {
+    padding: 0.75rem 1rem;
+    background: linear-gradient(
+      177deg,
+      rgb($black, 50%) 0,
+      rgb($black, 20%) #{0.5 * $header-height},
+      rgb($white, 0%) $header-height
+    );
+
+    @include utils.size(100%, $header-height);
+  }
+
+  &__logo {
+    font: 2rem/3rem $font-accent-family;
+    letter-spacing: 0.2rem;
+    width: $header-height;
+
+    &::first-line {
+      mix-blend-mode: normal;
+    }
+  }
+
+  &__logo-accent {
+    mix-blend-mode: overlay;
+  }
+
+  &__footer {
+    background: linear-gradient(
+      1deg,
+      rgb($black, 50%) 0,
+      rgb($black, 20%) #{0.5 * $footer-height},
+      rgb($black, 7%) #{0.75 * $footer-height},
+      rgb($white, 0%) $footer-height
+    );
+    display: flex;
+    align-items: end;
+    justify-content: center;
+    padding-block-end: 0.2rem;
+
+    a {
+      color: white;
+      opacity: 0.5;
+      display: none;
+    }
+
+    @include utils.size(100%, $footer-height);
+  }
+}

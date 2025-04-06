@@ -1,5 +1,6 @@
 /* stylelint-disable custom-media-pattern */
 @use 'vars' as *;
+@use 'utils';
 
 // "mobile first" custom media query names
 @each $name, $breakpoint in $layout-breakpoints {
@@ -9,3 +10,16 @@
 @each $name, $breakpoint in $layout-breakpoints {
   @custom-media --layout-df-#{$name} screen and (width < #{$breakpoint});
 }
+
+@include utils.gen-font-faces(
+  $font-txt-family,
+  $font-txt-weights,
+  ('woff2', 'ttf')
+);
+@include utils.font-face(
+  $font-accent-family,
+  '../assets/fonts/#{$font-accent-family}',
+  normal,
+  normal,
+  ('woff2', 'ttf')
+);

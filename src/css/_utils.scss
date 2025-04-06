@@ -1,9 +1,86 @@
+@use 'sass:list';
+@use 'sass:string';
 
+@mixin gen-font-faces($font-family, $font-weights, $formats) {
+  @each $name, $weight in $font-weights {
+    $font-modif-name: capitalize-first($name);
 
-// @mixin cover {
-//   object-fit: cover;object-fitobject-fit
-//   size: 100%;sizesize
-// }
+    @include font-face(
+      $font-family,
+      '../assets/fonts/#{$font-family}-#{$font-modif-name}',
+      $weight,
+      normal,
+      $formats
+    );
+  }
+}
+
+@mixin font-face(
+  $font-name,
+  $font-path,
+  $font-weight: normal,
+  $font-style: normal,
+  $formats: ('eot', 'woff2', 'woff', 'ttf'),
+  $font-display: swap
+) {
+  @font-face {
+    $need-eot: list.index($formats, 'eot');
+
+    font-family: '#{$font-name}';
+    font-weight: #{$font-weight};
+    font-style: #{$font-style};
+    font-display: #{$font-display};
+
+    @if $need-eot {
+      src: url('#{$font-path}.eot');
+    }
+
+    $src-list: ();
+
+    @if $need-eot {
+      $src-list: list.append(
+        $src-list,
+        url('#{$font-path}.eot?#iefix') format('embedded-opentype'),
+        comma
+      );
+    }
+
+    @each $format in $formats {
+      @if $format == 'ttf' {
+        $src-list: list.append(
+          $src-list,
+          url('#{$font-path}.#{$format}') format('truetype'),
+          comma
+        );
+      } @else if $need-eot {
+        $src-list: list.append(
+          $src-list,
+          url('#{$font-path}.#{$format}') format('#{$format}'),
+          comma
+        );
+      }
+    }
+
+    src: #{$src-list};
+  }
+}
+
+@mixin box-stack($gap: null, $align: center, $justify: space-between) {
+  display: flex;
+  flex-direction: column;
+
+  @if $gap {
+    gap: $gap;
+  }
+
+  @if $align {
+    align-items: $align;
+  }
+
+  @if $justify {
+    justify-content: $justify;
+  }
+}
 
 @mixin size($width, $height: $width) {
   width: $width;
@@ -14,4 +91,8 @@
   object-fit: cover;
 
   @include size(100vw, 100vh);
+}
+
+@function capitalize-first($str) {
+  @return string.to-upper-case(string.slice($str, 1, 1)) + string.slice($str, 2);
 }

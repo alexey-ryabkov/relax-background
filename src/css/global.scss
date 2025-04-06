@@ -1,17 +1,8 @@
-@use 'sass:map';
 @use 'vars' as *;
 @use 'utils';
 
 :root {
   // ...
-}
-
-body {
-  min-block-size: map.get($layout-breakpoints, min);
-}
-
-.visualizer {
-  @include utils.fullscreen;
 }
 
 .fullscreened {
