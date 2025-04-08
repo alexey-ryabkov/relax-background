@@ -1,7 +1,37 @@
 .player
-  audio(
-    src='assets/audio/Maarten Schellekens - Up from Here.mp3',
-    preload='metadata',
-    loop
-  ) 
-    p Ваш браузер не поддерживает встроенное аудио, поэтому вы, к сожалению, не сможете использовать данное веб-приложение
+  .player__controls
+    button.player__button.player__button_ctrl_toggle(
+      aria-label='воспроизвести/пауза'
+    )
+      i.fa-solid.fa-play
+    button.player__button.player__button_ctrl_prev(aria-label='назад')
+      i.fa-solid.fa-forward-step
+    button.player__button.player__button_ctrl_next(aria-label='вперед')
+      i.fa-solid.fa-backward-step
+  ul.player__playlist
+    //- each track, i in playlist
+    li.player__record.player__record_settled
+      audio(
+        src='assets/audio/Maarten Schellekens - Up from Here.mp3',
+        preload='metadata',
+        loop
+      ) 
+    li.player__record
+      audio(
+        src='assets/audio/Maarten Schellekens - Sweet Dreams - Middle-East Remix.mp3',
+        preload='metadata',
+        loop
+      )
+    li.player__record
+      audio(
+        src='assets/audio/Maarten Schellekens - Up from Here.mp3',
+        preload='metadata',
+        loop
+      )
+    li.player__record
+      audio(
+        src='assets/audio/Maarten Schellekens - Sweet Dreams - Middle-East Remix.mp3',
+        preload='metadata',
+        loop
+      ) 
+  span.player__tonearm(aria-hidden)

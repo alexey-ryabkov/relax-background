@@ -1,4 +1,5 @@
-import './components/visualizer/index.js';
-import './components/player/index.js';
+import './components/visualizer';
+import player from './components/player';
 
-console.log('Hello world');
+// @ts-ignore
+window.player = player;

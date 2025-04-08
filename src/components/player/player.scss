@@ -1,8 +1,177 @@
+@use 'sass:math';
+@use '../../css/vars' as *;
+@use '../../css/utils';
+
+$player-pos: 0.625rem;
+$player-width: 18.75rem;
+$player-height: 13.75rem;
+$record-radius: 5.5rem;
+$records-cnt-def: 4;
+$records-circle-pos-def: -23.5rem;
+$records-circle-radius-def: 18rem;
+
+// TODO менять z-index контролов и tonearm до и после переключения трека
 .player {
-  // position: absolute;position
-  // top: 40px;top
-  // left: 40px;left
-  // box-shadow: -6px 6px 9px #000000de;box-shadow
-  // border-radius: 50%;border-radius
-  // z-index: 50;z-index
+  --tonearm-turn-duration: 1.5s;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  position: fixed;
+  background: #666;
+  box-shadow: 0.125rem 0.125rem 0.625rem #333;
+  border-radius: 1rem;
+  bottom: $player-pos;
+  left: 50%;
+  margin-left: -1 * math.div($player-width, 2);
+
+  @include utils.size($player-width, $player-height);
+
+  // placement-disk
+  &::before {
+    content: '';
+    display: block;
+    background: #333;
+    position: absolute;
+    inset: 50% auto auto 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+
+    @include utils.size(2 * $record-radius * 1.02);
+  }
+
+  // tonearm
+  &__tonearm {
+    content: '';
+    display: block;
+    width: 10rem;
+    height: 0.625rem;
+    border-radius: 0.125rem;
+    margin: 1.25rem 1.75rem;
+    transform-origin: right center;
+    transform: rotate(-95deg);
+    transition: transform var(--tonearm-turn-duration) ease-in-out;
+    background: #454545;
+  }
+
+  /*  &_playing  &__button {
+    pointer-events: none;
+  } */
+
+  &__button {
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: #333;
+    overflow: hidden;
+    border-radius: 0.25rem;
+    color: #666;
+
+    @include utils.size(1.5rem);
+
+    &:enabled {
+      cursor: pointer;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+    }
+  }
+
+  &__controls {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+    padding: 1rem;
+    height: 100%;
+    gap: 1.75rem;
+  }
+
+  &__playlist {
+    position: absolute;
+    // z-index: 2;
+    // bottom: var(--records-circle-pos, $records-circle-pos-def);
+
+    top: math.div($player-height, 2) - $record-radius;
+    left: 50%;
+    margin: 0 0 0 -1 * $records-circle-radius-def;
+    transform-origin: center;
+    transition: rotate 2s ease-in-out;
+    list-style: none;
+
+    /* transform: translateX(-50%); */
+
+    @include utils.size(
+      var(--records-circle-size, #{2 * $records-circle-radius-def})
+    );
+  }
+
+  &__record {
+    // $record-size +
+    transform-origin: center calc($records-circle-radius-def);
+    margin-left: -1 * $record-radius;
+    position: absolute;
+    left: 50%;
+
+    // vinyl
+    &::before {
+      content: '';
+      display: block;
+      border-radius: 50%;
+      transform-origin: center;
+      background: linear-gradient(#000, #333);
+      box-shadow: 0 0 5px rgba($black, 75%);
+      animation: rotation 2s linear var(--tonearm-turn-duration) infinite paused;
+      will-change: rotate, scale, box-shadow;
+      transition: all 1.5s;
+      // animation: rotation 2s linear var(--tonearm-turn-duration) infinite;
+
+      @include utils.size(2 * $record-radius);
+    }
+
+    // TODO сборос положения пластинки
+    // &_settled::before {
+    //   rotate: 0deg;
+    // }
+  }
+
+  &__playlist &__record {
+    $angle-step: math.div(360deg, $records-cnt-def);
+
+    @for $i from 1 through ($records-cnt-def) {
+      &:nth-child(#{$i}) {
+        $angle: ($i - 1) * $angle-step;
+
+        transform: rotate($angle);
+      }
+    }
+  }
+
+  // tonearm
+  &_playing &__tonearm {
+    transform: rotate(-95deg + 40deg);
+    // transition-delay: ;
+  }
+
+  // vinyl
+
+  &_playing &__record_settled::before {
+    animation-play-state: running;
+  }
+
+  &_changing-record &__record::before {
+    scale: 1.1;
+    box-shadow: 0 0 20px rgba($black, 75%);
+  }
+}
+
+@keyframes rotation {
+  0% {
+    rotate: 0deg;
+  }
+
+  100% {
+    rotate: 360deg;
+  }
 }

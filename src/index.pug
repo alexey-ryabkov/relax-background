@@ -10,14 +10,14 @@ html(lang='ru')
     link(href='assets/css/fa-regular.min.css', rel='stylesheet')/
     link(href='assets/css/fa-solid.min.css', rel='stylesheet')/
     link(href='css/index.scss', rel='stylesheet')/
-    script(src='main.js', type='module')
+    script(src='main.js', type='module', defer)
   body.page
     header.page__header
       .page__logo
         | Relax
         |
-        div.page__logo-accent 
-          | Background  
+        .page__logo-accent
+          | Background
     main.page__workarea
       include components/visualizer/tmpl
       include components/player/tmpl
