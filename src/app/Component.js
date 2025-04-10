@@ -1,12 +1,25 @@
 import { castArray, isUndefined } from 'lodash';
 import EventEmitter from './EventEmitter';
 
+/**
+ * @abstract
+ */
 export default class Component {
-  /** @type HTMLElement **/
+  /** @type HTMLElement */
   _container;
-  /** @type string **/
+  /** @type string */
   _name;
   _emitter = new EventEmitter();
+
+  /** @type EventHandlerMethod */
+  // @ts-ignore method initialized in constructor
+  on;
+  /** @type EventHandlerMethod */
+  // @ts-ignore method initialized in constructor
+  once;
+  /** @type EventHandlerMethod */
+  // @ts-ignore method initialized in constructor
+  off;
 
   /**
    * @param {HTMLElement} element
@@ -15,6 +28,11 @@ export default class Component {
   constructor(element, name) {
     this._container = element;
     this._name = name;
+    // proxy some emitter methods
+    ['on', 'once', 'off'].forEach((method) => {
+      // @ts-ignore methods defined  with JSDoc above
+      this[method] = (...args) => this._emitter[method](...args);
+    });
     this._init();
   }
 
@@ -22,7 +40,17 @@ export default class Component {
     return this._name;
   }
 
+  /** @abstract */
   _init() {}
+
+  /**
+   * @param {string} eventName
+   * @param {Object<string, unknown>} [data]
+   */
+  _emit(eventName, data) {
+    this._emitter.trigger(eventName, data);
+    // this._emitter.trigger(`${this.name}:${eventName}`, data);
+  }
 
   /**
    * @param {HTMLElement|null} element
@@ -44,13 +72,6 @@ export default class Component {
         element.disabled = flag;
       }
     }
-  }
-
-  /**
-   * @param {string} eventName
-   */
-  _emit(eventName) {
-    this._emitter.trigger(`${this.name}:${eventName}`);
   }
 
   /**

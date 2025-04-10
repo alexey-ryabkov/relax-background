@@ -1,11 +1,19 @@
-import { find, first, includes, isUndefined, last } from 'lodash';
+import {
+  castArray,
+  find,
+  first,
+  includes,
+  indexOf,
+  isUndefined,
+  last,
+} from 'lodash';
 import Component from '../../app/Component';
 import EventEmitter from '../../app/EventEmitter';
 import { rotateElement, wait4animated } from '../../app/utils';
 
 export default class Player extends Component {
   /** @type EventEmitter|undefined **/
-  _environment;
+  environment;
   _changeRecordRotateAngle = 0;
 
   /**
@@ -17,12 +25,12 @@ export default class Player extends Component {
     this._environment = environment;
   }
 
-  get _currentTrack() {
-    return this._getTrack(this._currentRecordElem);
-  }
-
   get _currentRecordElem() {
     return this._getElement('record', 'settled');
+  }
+
+  get _currentTrack() {
+    return this._getTrack(this._currentRecordElem);
   }
 
   get _toggleCtrl() {
@@ -59,6 +67,7 @@ export default class Player extends Component {
     await wait4animated(this._getElement('tonearm'), 'transition');
 
     this._currentTrack[flag ? 'play' : 'pause']();
+    this._emit('playing:toggle', { flag });
 
     // this._setElemActivity(this._toggleCtrl, 'button', true);
     this._toggleCtrlsActivity(true, this._toggleCtrl);
@@ -73,10 +82,18 @@ export default class Player extends Component {
    * @param {boolean} [resume]
    */
   async changeRecord(dir, resume) {
-    this._emit('change-record:inited');
-    this._toggleCtrlsActivity(false);
+    const recordElemChange2 = this._getRecordElemChange2(dir);
+    this._emit('change-record:init', {
+      recordNum: this._defineRecordNum(recordElemChange2),
+    });
 
-    const changingRecord = async () => {
+    this._toggleCtrlsActivity(false);
+    Promise.all([
+      this.togglePlaying(false),
+      this._loadTrack(recordElemChange2),
+      this._wait4envReady2changeRecord(),
+    ]).then(async () => {
+      this._emit('change-record:start');
       await this._toggleRecordEjectedAnimation(true);
       await this._changeRecordAnimation();
       this._replaceCurrentRecordElem(dir);
@@ -86,19 +103,15 @@ export default class Player extends Component {
       if (resume) {
         await this.togglePlaying(true);
       }
-      this._toggleCtrlsActivity(false);
+      this._toggleCtrlsActivity(true);
       this._emit('change-record:end');
-    };
 
-    const recordElemChange2 = this._getRecordElemChange2(dir);
-    Promise.all([
-      this.togglePlaying(false),
-      this._loadTrack(recordElemChange2),
-    ]).then(() => {
-      this._emit('change-record:start');
+      /* 
+      changingRecord();
       if (this._environment) {
+        // TODO а если видео загрузиться быстрее,
         this._environment?.once('ready2change-record', changingRecord);
-      } else changingRecord();
+      } else changingRecord(); */
     });
   }
 
@@ -156,22 +169,25 @@ export default class Player extends Component {
 
   /**
    * @param {HTMLElement} recordElem
-   * @returns {Promise<void>}
+   * @returns
    */
   _loadTrack(recordElem) {
+    const loading = /** @type Promise<void> */ (
+      new Promise((resolve) => {
+        track.addEventListener(
+          'canplay',
+          () => {
+            this._emit('change-record:track-loaded');
+            resolve();
+          },
+          { once: true },
+        );
+      })
+    );
     const track = this._getTrack(recordElem);
     track.setAttribute('preload', 'auto');
     track.load();
-    return new Promise((resolve) => {
-      track.addEventListener(
-        'canplay',
-        () => {
-          this._emit('change-record:track-loaded');
-          resolve();
-        },
-        { once: true },
-      );
-    });
+    return loading;
   }
 
   /**
@@ -180,6 +196,17 @@ export default class Player extends Component {
    */
   _getTrack(recordElem) {
     return /** @type HTMLAudioElement */ (recordElem.querySelector('audio'));
+  }
+
+  /**
+   * @returns {Promise<void>|null}
+   */
+  _wait4envReady2changeRecord() {
+    return this.environment
+      ? new Promise((resolve) => {
+          this.environment?.once('ready2change-record', () => resolve());
+        })
+      : null;
   }
 
   /**
@@ -211,5 +238,12 @@ export default class Player extends Component {
       this._setElemActivity(this._prevCtrl, 'button', flag);
       this._setElemActivity(this._nextCtrl, 'button', flag);
     }
+  }
+
+  /**
+   * @param {HTMLElement} recordElem
+   */
+  _defineRecordNum(recordElem) {
+    return indexOf(Array.from(this._getElements('record')), recordElem);
   }
 }

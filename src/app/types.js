@@ -5,6 +5,10 @@
  */
 
 /**
+ * @typedef {(eventName: string, listener: EventHandler) => void} EventHandlerMethod
+ */
+
+/**
  * @typedef {Object.<string, EventHandler[]>} Events
  */
 

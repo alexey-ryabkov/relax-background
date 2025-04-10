@@ -97,7 +97,8 @@ $records-circle-radius-def: 18rem;
     left: 50%;
     margin: 0 0 0 -1 * $records-circle-radius-def;
     transform-origin: center;
-    transition: rotate 2s ease-in-out;
+    transition: rotate var(--change-record-animation-duration, 2s)
+      var(--change-record-animation-easing, ease-in-out);
     list-style: none;
 
     /* transform: translateX(-50%); */

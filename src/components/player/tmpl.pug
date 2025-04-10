@@ -3,11 +3,11 @@
     button.player__button.player__button_ctrl_toggle(
       aria-label='воспроизвести/пауза'
     )
-      i.fa-solid.fa-play
+      i.fa-solid.fa-play(aria-hidden)
     button.player__button.player__button_ctrl_prev(aria-label='назад')
-      i.fa-solid.fa-forward-step
+      i.fa-solid.fa-forward-step(aria-hidden)
     button.player__button.player__button_ctrl_next(aria-label='вперед')
-      i.fa-solid.fa-backward-step
+      i.fa-solid.fa-backward-step(aria-hidden)
   ul.player__playlist
     //- each track, i in playlist
     li.player__record.player__record_settled

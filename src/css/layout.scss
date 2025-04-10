@@ -10,6 +10,7 @@ body {
   min-height: map.get($layout-breakpoints, min);
   font: $rem-size $font-txt-family;
   color: $white;
+  background: linear-gradient(130deg, #123e66, #593273 41.07%, #623d45 76.05%);
 }
 
 .page {
@@ -39,18 +40,30 @@ body {
   }
 
   &__logo {
-    font: 2rem/3rem $font-accent-family;
+    font:
+      bold 2rem/3rem #{$font-accent-family},
+      sans-serif;
+    text-transform: uppercase;
     letter-spacing: 0.2rem;
     width: $header-height;
+    mix-blend-mode: overlay;
 
-    &::first-line {
-      mix-blend-mode: normal;
-    }
+    // &::first-line {
+    //   color: inherit;
+    //   mix-blend-mode: normal;
+    // }
   }
 
   &__logo-accent {
-    mix-blend-mode: overlay;
+    color: inherit;
+    mix-blend-mode: normal;
+    transition: color var(--change-record-animation-duration, 2s)
+      var(--change-record-animation-easing, ease-in-out);
   }
+
+  // &__logo-accent {
+  //   mix-blend-mode: overlay;
+  // }
 
   &__footer {
     background: linear-gradient(

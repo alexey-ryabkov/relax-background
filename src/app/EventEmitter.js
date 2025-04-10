@@ -1,30 +1,25 @@
 export default class EventEmitter {
   /** @type Events */
-  events = {};
+  _events = {};
   /** @type Events */
-  onceEvents = {};
-  /** @type string[] */
+  _onceEvents = {};
 
-  /**
-   * @param {string} event
-   * @param {EventHandler} listener
-   */
+  /** @type EventHandlerMethod */
   on(event, listener) {
-    if (!this.events[event]) {
-      this.events[event] = [];
+    if (!this._events[event]) {
+      this._events[event] = [];
     }
-    this.events[event].push(listener);
+    this._events[event].push(listener);
+    // return this;
   }
 
-  /**
-   * @param {string} event
-   * @param {EventHandler} listener
-   */
+  /** @type EventHandlerMethod */
   once(event, listener) {
-    if (!this.events[event]) {
-      this.onceEvents[event] = [];
+    if (!this._events[event]) {
+      this._onceEvents[event] = [];
     }
-    this.onceEvents[event].push(listener);
+    this._onceEvents[event].push(listener);
+    // return this;
   }
 
   /**
@@ -32,31 +27,29 @@ export default class EventEmitter {
    * @param {...any} args
    */
   trigger(event, ...args) {
-    if (this.events[event]) {
-      this.events[event].forEach((listener) => {
+    if (this._events[event]) {
+      this._events[event].forEach((listener) => {
         listener(...args);
       });
     }
-    if (this.onceEvents[event]) {
-      this.onceEvents[event].forEach((listener) => {
+    if (this._onceEvents[event]) {
+      this._onceEvents[event].forEach((listener) => {
         listener(...args);
       });
-      this.onceEvents[event] = [];
+      this._onceEvents[event] = [];
     }
   }
 
-  /**
-   * @param {string} event
-   * @param {EventHandler} listener
-   */
+  /** @type EventHandlerMethod */
   off(event, listener) {
-    if (this.events[event]) {
-      this.events[event] = this.events[event].filter((l) => l !== listener);
+    if (this._events[event]) {
+      this._events[event] = this._events[event].filter((l) => l !== listener);
     }
-    if (this.onceEvents[event]) {
-      this.onceEvents[event] = this.onceEvents[event].filter(
+    if (this._onceEvents[event]) {
+      this._onceEvents[event] = this._onceEvents[event].filter(
         (l) => l !== listener,
       );
     }
+    // return this;
   }
 }
