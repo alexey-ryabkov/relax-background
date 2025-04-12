@@ -11,7 +11,7 @@
     "format": "prettier --write \"src/**/*.{scss,js,html}\" \"*.md\"",
     "clear": "rm -rf .parcel-cache dist",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "predeploy": "npm run build",
+    "predeploy": "npm run build --public-url ./",
     "deploy": "gh-pages -d dist"
   },
   "keywords": [],
