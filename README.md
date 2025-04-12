@@ -1,13 +1,19 @@
 # Итоговая работа по курсу HTML&CSS
 
-Создано веб-приложение для проигрывания лаундж-треков и показом видео-фона, приложение доступно на [GitHub Pages](https://alexey-ryabkov.github.io/relax-background/demo/)
+Создано веб-приложение для проигрывания лаундж-треков и показом видео-фона, приложение доступно на [GitHub Pages](https://alexey-ryabkov.github.io/relax-background/)
 
 
 ## Комментарии к реализации
 
 Веб-приложение адаптивно, все анимации [интерактивного плеера](/src/components/player/) реализованы на CSS, для построения его интерфейса используются псевдоклассы и псевдоэлементы, JS занимается обработкой событий и оркестрированием последовательности анимаций.
 
-Проект использует css-препроцессор scss, шаблонизатор [pug](https://pugjs.org/) и сборщик [parcel](https://parceljs.org/). В проекте используются треки с [FMA](https://freemusicarchive.org/) и видео с [pexels](https://www.pexels.com/) со свободной лицензией Creative Commons.
+Проект использует 
+- css-препроцессор scss, 
+- шаблонизатор [pug](https://pugjs.org/), 
+- сборщик [parcel](https://parceljs.org/)
+- утилиты [lodash](https://https://lodash.com/). 
+  
+В проекте используются треки с [FMA](https://freemusicarchive.org/) и ролики с [pexels](https://www.pexels.com/) со свободной лицензией Creative Commons.
 
 ## Локальный запуск
 
