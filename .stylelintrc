@@ -3,7 +3,7 @@
     "stylelint-config-standard-scss",
     "stylelint-prettier/recommended"
   ],
-  "plugins": ["stylelint-prettier"],
+  "plugins": ["stylelint-scss", "stylelint-prettier"],
   "rules": {
     "prettier/prettier": [true, { "severity": "warning" }],
     "custom-property-empty-line-before": null,

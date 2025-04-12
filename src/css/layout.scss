@@ -8,7 +8,7 @@ html {
 
 body {
   min-height: map.get($layout-breakpoints, min);
-  font: $rem-size $font-txt-family;
+  font-family: $font-txt-family;
   color: $white;
   background: linear-gradient(130deg, #123e66, #593273 41.07%, #623d45 76.05%);
 }
@@ -46,24 +46,18 @@ body {
     text-transform: uppercase;
     letter-spacing: 0.2rem;
     width: $header-height;
+  }
+
+  &__logo-part {
     mix-blend-mode: overlay;
 
-    // &::first-line {
-    //   color: inherit;
-    //   mix-blend-mode: normal;
-    // }
+    &_accent {
+      color: inherit;
+      mix-blend-mode: normal;
+      transition: color var(--change-record-animation-duration, 2s)
+        var(--change-record-animation-easing, ease-in-out);
+    }
   }
-
-  &__logo-accent {
-    color: inherit;
-    mix-blend-mode: normal;
-    transition: color var(--change-record-animation-duration, 2s)
-      var(--change-record-animation-easing, ease-in-out);
-  }
-
-  // &__logo-accent {
-  //   mix-blend-mode: overlay;
-  // }
 
   &__footer {
     background: linear-gradient(

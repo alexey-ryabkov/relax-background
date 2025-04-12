@@ -2,7 +2,7 @@ const jsdoc = require('eslint-plugin-jsdoc');
 const prettier = require('eslint-plugin-prettier');
 
 module.exports = [
-  {
+  /* {
     plugins: {
       jsdoc,
     },
@@ -14,7 +14,7 @@ module.exports = [
         ]),
       ),
     },
-  },
+  }, */
   {
     plugins: {
       prettier,

@@ -1,3 +1,4 @@
+/* stylelint-disable selector-class-pattern */
 /* stylelint-disable custom-media-pattern */
 @use 'vars' as *;
 @use 'utils';
@@ -9,6 +10,46 @@
 // "desktop first" custom media query names
 @each $name, $breakpoint in $layout-breakpoints {
   @custom-media --layout-df-#{$name} screen and (width < #{$breakpoint});
+}
+
+@each $name, $breakpoint in $layout-breakpoints {
+  .hide-#{$name} {
+    @media (--layout-df-#{$name}) {
+      display: none !important;
+    }
+  }
+
+  .hide-up-#{$name} {
+    @media (--layout-mf-#{$name}) {
+      display: none !important;
+    }
+  }
+
+  .hide-visually-#{$name} {
+    @media (--layout-df-#{$name}) {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      border: 0;
+    }
+  }
+
+  .hide-visually-up-#{$name} {
+    @media (--layout-mf-#{$name}) {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      border: 0;
+    }
+  }
 }
 
 @include utils.gen-font-faces(

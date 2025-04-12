@@ -32,7 +32,8 @@
     "prettier": "3.5.3",
     "stylelint": "16.17.0",
     "stylelint-config-standard-scss": "14.0.0",
-    "stylelint-prettier": "5.0.3"
+    "stylelint-prettier": "5.0.3",
+    "stylelint-scss": "6.11.1"
   },
   "source": "src/index.pug",
   "@parcel/transformer-css": {

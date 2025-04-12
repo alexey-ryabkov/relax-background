@@ -9,3 +9,15 @@
 .fullscreened {
   @include utils.fullscreen;
 }
+
+html {
+  font-size: $rem-size;
+
+  @media (--layout-mf-lg) {
+    font-size: 1.25 * $rem-size;
+  }
+
+  @media (--layout-mf-xl) {
+    font-size: 1.5 * $rem-size;
+  }
+}
