@@ -6,11 +6,12 @@ $player-pos: 0.625rem;
 $player-width: 18.75rem;
 $player-height: 13.75rem;
 $record-radius: 5.5rem;
-$records-cnt-def: 4;
+// HACK need to define by inline-style css-var from tmpl.pug
+$records-cnt-def: 16;
 $records-circle-pos-def: -23.5rem;
-$records-circle-radius-def: 18rem;
+// HACK need to calc by records count
+$records-circle-radius-def: 2.6 * 18rem;
 
-// TODO менять z-index контролов и tonearm до и после переключения трека
 .player {
   --tonearm-turn-duration: 1.5s;
 
@@ -40,7 +41,6 @@ $records-circle-radius-def: 18rem;
     @include utils.size(2 * $record-radius * 1.02);
   }
 
-  // tonearm
   &__tonearm {
     content: '';
     display: block;
@@ -52,6 +52,17 @@ $records-circle-radius-def: 18rem;
     transform: rotate(-95deg);
     transition: transform var(--tonearm-turn-duration) ease-in-out;
     background: #454545;
+    position: relative;
+    z-index: 3;
+  }
+
+  &_playing &__tonearm {
+    transform: rotate(-95deg + 40deg);
+    // transition-delay: ;
+  }
+
+  &_changing-record &__tonearm {
+    z-index: 1;
   }
 
   /*  &_playing  &__button {
@@ -86,22 +97,26 @@ $records-circle-radius-def: 18rem;
     padding: 1rem;
     height: 100%;
     gap: 1.75rem;
+    position: relative;
+    z-index: 3;
+  }
+
+  &_changing-record &__controls {
+    z-index: 1;
   }
 
   &__playlist {
     position: absolute;
-    // z-index: 2;
-    // bottom: var(--records-circle-pos, $records-circle-pos-def);
-
-    top: math.div($player-height, 2) - $record-radius;
+    z-index: 2;
     left: 50%;
+    top: math.div($player-height, 2) - $record-radius;
     margin: 0 0 0 -1 * $records-circle-radius-def;
     transform-origin: center;
-    transition: rotate var(--change-record-animation-duration, 2s)
+    // transition: rotate var(--change-record-animation-duration, 2s)
+    //   var(--change-record-animation-easing, ease-in-out);
+    transition: transform var(--change-record-animation-duration, 2s)
       var(--change-record-animation-easing, ease-in-out);
     list-style: none;
-
-    /* transform: translateX(-50%); */
 
     @include utils.size(
       var(--records-circle-size, #{2 * $records-circle-radius-def})
@@ -149,18 +164,12 @@ $records-circle-radius-def: 18rem;
     }
   }
 
-  // tonearm
-  &_playing &__tonearm {
-    transform: rotate(-95deg + 40deg);
-    // transition-delay: ;
-  }
-
   // vinyl
-
   &_playing &__record_settled::before {
     animation-play-state: running;
   }
 
+  // vinyl
   &_changing-record &__record::before {
     scale: 1.1;
     box-shadow: 0 0 20px rgba($black, 75%);

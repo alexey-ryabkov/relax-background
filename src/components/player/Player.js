@@ -1,20 +1,11 @@
-import {
-  castArray,
-  find,
-  first,
-  includes,
-  indexOf,
-  isUndefined,
-  last,
-} from 'lodash';
+import { first, indexOf, isUndefined, last } from 'lodash';
 import Component from '../../app/Component';
 import EventEmitter from '../../app/EventEmitter';
-import { rotateElement, wait4animated } from '../../app/utils';
+import { delayer, rotateElement, cssAnimation } from '../../app/utils';
 
 export default class Player extends Component {
   /** @type EventEmitter|undefined **/
   environment;
-  _changeRecordRotateAngle = 0;
 
   /**
    * @param {HTMLElement} element
@@ -64,7 +55,7 @@ export default class Player extends Component {
     this._toggleCtrlsActivity(false, this._toggleCtrl);
 
     this._toggleModificator('playing', flag);
-    await wait4animated(this._getElement('tonearm'), 'transition');
+    await cssAnimation(this._getElement('tonearm'), 'transition');
 
     this._currentTrack[flag ? 'play' : 'pause']();
     this._emit('playing:toggle', { flag });
@@ -87,6 +78,8 @@ export default class Player extends Component {
       recordNum: this._defineRecordNum(recordElemChange2),
     });
 
+    // console.log(recordElemChange2, this._defineRecordNum(recordElemChange2));
+
     this._toggleCtrlsActivity(false);
     Promise.all([
       this.togglePlaying(false),
@@ -95,9 +88,12 @@ export default class Player extends Component {
     ]).then(async () => {
       this._emit('change-record:start');
       await this._toggleRecordEjectedAnimation(true);
-      await this._changeRecordAnimation();
+      await this._changeRecordAnimation(dir);
+      // HACK cause previuos await doesnt work(
+      await delayer(2_000);
+      // debugger;
       this._replaceCurrentRecordElem(dir);
-      // TODO сборос положения пластинки
+      // XXX сброс разворота пластинки?
       // await wait4animated(this._currentRecordElem, 'transition');
       await this._toggleRecordEjectedAnimation(false);
       if (resume) {
@@ -105,13 +101,6 @@ export default class Player extends Component {
       }
       this._toggleCtrlsActivity(true);
       this._emit('change-record:end');
-
-      /* 
-      changingRecord();
-      if (this._environment) {
-        // TODO а если видео загрузиться быстрее,
-        this._environment?.once('ready2change-record', changingRecord);
-      } else changingRecord(); */
     });
   }
 
@@ -141,23 +130,23 @@ export default class Player extends Component {
    * @param {'previous'|'next'} dir
    */
   _replaceCurrentRecordElem(dir) {
+    const currentElem = this._currentRecordElem;
     this._currentRecordElem.classList.remove(
       this._getElemModificationCls('record', 'settled'),
     );
-    // const newRecordElem = this._getNewRecordElem(dir);
-    // newRecordElem?.classList.add(this._getElemModifCssCls('record', 'settled'));
-    this._getRecordElemChange2(dir).classList.add(
+    this._getRecordElemChange2(dir, currentElem).classList.add(
       this._getElemModificationCls('record', 'settled'),
     );
   }
 
   /**
    * @param {'previous'|'next'} dir
+   * @param {HTMLElement} currentElem
    * @returns {HTMLElement}
    */
-  _getRecordElemChange2(dir) {
+  _getRecordElemChange2(dir, currentElem = this._currentRecordElem) {
     let recordElem = /** @type {HTMLElement|undefined} */ (
-      this._currentRecordElem[`${dir}ElementSibling`]
+      currentElem[`${dir}ElementSibling`]
     );
     recordElem ??= /** @type {HTMLElement} */ (
       dir == 'previous'
@@ -172,6 +161,7 @@ export default class Player extends Component {
    * @returns
    */
   _loadTrack(recordElem) {
+    const track = this._getTrack(recordElem);
     const loading = /** @type Promise<void> */ (
       new Promise((resolve) => {
         track.addEventListener(
@@ -184,7 +174,6 @@ export default class Player extends Component {
         );
       })
     );
-    const track = this._getTrack(recordElem);
     track.setAttribute('preload', 'auto');
     track.load();
     return loading;
@@ -214,16 +203,21 @@ export default class Player extends Component {
    */
   async _toggleRecordEjectedAnimation(flag) {
     this._toggleModificator('changing-record', flag);
-    await wait4animated(this._currentRecordElem, 'transition');
+    return cssAnimation(this._currentRecordElem, 'transition');
   }
 
-  async _changeRecordAnimation() {
+  /**
+   * @param {'previous'|'next'} dir
+   */
+  _changeRecordAnimation(dir) {
     this._emit('change-record:start-animation');
-    await rotateElement(
+    const angle = /** @type number */ (this._changeRecordRotateAngle);
+    const animation = rotateElement(
       this._getElement('playlist'),
-      this._changeRecordRotateAngle,
+      (dir == 'next' ? -1 : 1) * angle,
     );
     this._emit('change-record:end-animation');
+    return animation;
   }
 
   /**

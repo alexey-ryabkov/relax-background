@@ -69,7 +69,7 @@ export default class Component {
         element instanceof HTMLButtonElement ||
         element instanceof HTMLInputElement
       ) {
-        element.disabled = flag;
+        element.disabled = !flag;
       }
     }
   }

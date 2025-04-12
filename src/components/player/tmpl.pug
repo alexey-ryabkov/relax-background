@@ -4,34 +4,23 @@
       aria-label='воспроизвести/пауза'
     )
       i.fa-solid.fa-play(aria-hidden)
-    button.player__button.player__button_ctrl_prev(aria-label='назад')
-      i.fa-solid.fa-forward-step(aria-hidden)
     button.player__button.player__button_ctrl_next(aria-label='вперед')
+      i.fa-solid.fa-forward-step(aria-hidden)
+    button.player__button.player__button_ctrl_prev(aria-label='назад')
       i.fa-solid.fa-backward-step(aria-hidden)
   ul.player__playlist
     //- each track, i in playlist
-    li.player__record.player__record_settled
-      audio(
-        src='assets/audio/Maarten Schellekens - Up from Here.mp3',
-        preload='metadata',
-        loop
-      ) 
-    li.player__record
-      audio(
-        src='assets/audio/Maarten Schellekens - Sweet Dreams - Middle-East Remix.mp3',
-        preload='metadata',
-        loop
-      )
-    li.player__record
-      audio(
-        src='assets/audio/Maarten Schellekens - Up from Here.mp3',
-        preload='metadata',
-        loop
-      )
-    li.player__record
-      audio(
-        src='assets/audio/Maarten Schellekens - Sweet Dreams - Middle-East Remix.mp3',
-        preload='metadata',
-        loop
-      ) 
+    each counter in [1, 2, 3, 4, 5, 6, 7, 8]
+      li(class=`player__record${counter === 1 ? ' player__record_settled' : ''}`)
+        audio(
+          src='assets/audio/Maarten Schellekens - Up from Here.mp3',
+          preload='metadata',
+          loop
+        ) 
+      li.player__record
+        audio(
+          src='assets/audio/Maarten Schellekens - Sweet Dreams - Middle-East Remix.mp3',
+          preload='metadata',
+          loop
+        ) 
   span.player__tonearm(aria-hidden)

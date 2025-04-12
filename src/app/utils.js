@@ -1,17 +1,3 @@
-// /**
-//  * @param {number} angle
-//  * @returns
-//  */
-// export function rotateElement(angle) {
-//   /** @type HTMLElement|null **/
-//   const element = document.querySelector('.element');
-//   if (!element) return;
-//   const currentRotation = getRotation(element);
-//   const newRotation = currentRotation + angle;
-//   element.style.transform = `rotate(${newRotation}deg)`;
-// }
-//  * @param {number} [duration] in seconds, if transition not defined in css
-
 import { delay } from 'lodash';
 
 /**
@@ -42,6 +28,7 @@ export function rotateElement(
   easing = 'ease-in-out',
 ) {
   const currentAngle = getRotation(element);
+  console.log('current angle', currentAngle, 'new angle', angle);
   if (duration) {
     return element.animate(
       [
@@ -54,8 +41,9 @@ export function rotateElement(
       },
     ).finished;
   } else {
-    element.style.rotate = `${angle}deg`;
-    return wait4animated(element, 'transition');
+    // element.style.rotate = `${currentAngle + angle}deg`;
+    element.style.transform = `rotate(${currentAngle + angle}deg)`;
+    return cssAnimation(element, 'transition');
   }
 }
 
@@ -65,6 +53,7 @@ export function rotateElement(
  */
 export function getRotation(element) {
   const { transform } = window.getComputedStyle(element);
+  console.log('transform matrix', transform);
   if (transform === 'none') return 0;
   const matrix = transform
     .split('(')[1]
@@ -80,7 +69,7 @@ export function getRotation(element) {
  * @param {'animation'|'transition'} type
  * @returns {Promise<void>}
  */
-export const wait4animated = (element, type = 'animation') => {
+export const cssAnimation = (element, type = 'animation') => {
   return new Promise((resolve) => {
     element.addEventListener(`${type}end`, () => resolve(), { once: true });
   });
