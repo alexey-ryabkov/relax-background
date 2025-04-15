@@ -1,0 +1,35 @@
+[
+  {
+    "title": "Maarten Schellekens - Up from Here",
+    "audio": "Maarten Schellekens - Up from Here.mp3",
+    "video": "8319438-sd_640_360_25fps.mp4",
+    "licence": "\"Up from Here\" by \"Maarten Schellekens\" is licensed under CC BY 4.0",
+    "theme": {
+      "color": "goldenrod"
+    }
+  },
+  {
+    "title": "Maarten Schellekens - Sweet Dreams (Middle-East Remix)",
+    "audio": "Maarten Schellekens - Sweet Dreams - Middle-East Remix.mp3",
+    "video": "uhd_30fps.mp4",
+    "theme": {
+      "color": "paleTurquoise"
+    }
+  },
+  {
+    "title": "Maarten Schellekens - On a long and winding desert road",
+    "audio": "Maarten Schellekens - On a long and winding desert road.mp3",
+    "video": "855548-hd_1920_1080_25fps.mp4",
+    "theme": {
+      "color": "plum"
+    }
+  },
+  {
+    "title": "Maarten Schellekens - Ulua Beach",
+    "audio": "Maarten Schellekens - Ulua Beach.mp3",
+    "video": "856935-hd_1920_1080_24fps.mp4",
+    "theme": {
+      "color": "YellowGreen"
+    }
+  }
+]
