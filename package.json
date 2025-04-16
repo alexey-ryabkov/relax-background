@@ -3,8 +3,10 @@
   "version": "1.0.0",
   "scripts": {
     "start": "npm-run-all build serve",
-    "dev": "parcel",
-    "build": "parcel build",
+    "dev": "npm-run-all copy:assets parcel",
+    "parcel": "parcel",
+    "build": "parcel build && npm run copy:assets",
+    "copy:assets": "mkdir -p dist && cp -Rf src/assets/video/ dist/",
     "serve": "http-server dist/",
     "lint:scripts": "eslint \"src/**/*.js\" --fix",
     "lint:styles": "stylelint 'src/**/*.scss' --fix",

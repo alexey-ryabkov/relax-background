@@ -6,22 +6,35 @@ $player-pos: 0.625rem;
 $player-width: 18.75rem;
 $player-height: 13.75rem;
 $record-radius: 5.5rem;
+$record-label-radius: 0.35 * $record-radius;
 // HACK need to define by inline-style css-var from tmpl.pug
 $records-cnt-def: 16;
 $records-circle-pos-def: -23.5rem;
 // HACK need to calc by records count
 $records-circle-radius-def: 2.6 * 18rem;
+$tonearm-idle-turn: -90deg;
+$tonearm-playing-turn: $tonearm-idle-turn + 30deg;
+$vinyl-hole: 0.12rem;
 
 .player {
   --tonearm-turn-duration: 1.5s;
 
+  box-shadow:
+    0.125rem 0.125rem 0.625rem rgb(black, 40%),
+    inset 0 0.15rem 0.5rem rgb(navajowhite, 50%),
+    inset 0 -0.35rem 0.5rem rgb(black, 50%);
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   position: fixed;
-  background: #666;
-  box-shadow: 0.125rem 0.125rem 0.625rem #333;
-  border-radius: 1rem;
+  background-image: url('../../assets/images/wooden.jpg');
+  background-image: image-set(
+    url('../../assets/images/wooden@1x.webp') 1x,
+    url('../../assets/images/wooden@2x.webp') 2x,
+    url('../../assets/images/wooden@3x.webp') 3x
+  );
+  background-size: cover;
+  border-radius: 0.5rem;
   bottom: $player-pos;
   left: 50%;
   margin-left: -1 * math.div($player-width, 2);
@@ -30,62 +43,113 @@ $records-circle-radius-def: 2.6 * 18rem;
 
   // placement-disk
   &::before {
-    content: '';
-    display: block;
-    background: #333;
-    position: absolute;
-    inset: 50% auto auto 50%;
-    transform: translate(-50%, -50%);
-    border-radius: 50%;
+    border: 0.15rem solid rgba(#76563b, 50%);
+    box-shadow: 0 0 0.75rem 0.5rem rgba(black, 25%);
 
-    @include utils.size(2 * $record-radius * 1.02);
+    @include utils.centered-circle($record-radius * 1.02);
+    @extend %conic-metal-texture;
+  }
+
+  // placement-disk stud
+  &::after {
+    @include utils.centered-circle($vinyl-hole, rgba(black, 75%));
   }
 
   &__tonearm {
-    content: '';
-    display: block;
-    width: 10rem;
-    height: 0.625rem;
-    border-radius: 0.125rem;
+    $tonearm-width: 11rem;
+    $tonearm-height: 0.625rem;
+    $tonearm-tip-part: 0.25;
+    $tonearm-rounding: math.div($tonearm-height, 2);
+
+    box-shadow: 0 0 2px 1px rgba($black, 0.15);
+    border-radius: 0 $tonearm-rounding $tonearm-rounding 0;
     margin: 1.25rem 1.75rem;
     transform-origin: right center;
-    transform: rotate(-95deg);
+    transform: rotate($tonearm-idle-turn);
     transition: transform var(--tonearm-turn-duration) ease-in-out;
-    background: #454545;
     position: relative;
     z-index: 3;
+    background: linear-gradient(to bottom, #adadad 0%, white 50%, #adadad 100%);
+
+    @include utils.size(
+      (1 - $tonearm-tip-part) * $tonearm-width,
+      $tonearm-height
+    );
+
+    &::before {
+      $radius: 1rem;
+
+      content: '';
+      display: block;
+      position: absolute;
+      border-radius: 50%;
+      top: math.div($tonearm-height, 2);
+      right: -1 * $radius;
+      transform: translateY(-50%);
+      box-shadow: 0 0 5px 2px rgba($black, 0.3);
+
+      @include utils.size(2 * $radius);
+      @extend %conic-metal-texture;
+    }
+
+    &::after {
+      $skew: 18%;
+      $tonearm-tip-width: $tonearm-tip-part * $tonearm-width;
+
+      content: '';
+      display: block;
+      position: absolute;
+      width: $tonearm-tip-width;
+      height: (1 + 2 * math.div($skew, 100%)) * $tonearm-height * 1.05;
+      clip-path: polygon(0% 0%, 100% $skew, 100% calc(100% - $skew), 0% 100%);
+      left: -1 * $tonearm-tip-width + 0.1rem;
+      top: -1 * math.div($skew, 100%) * $tonearm-height;
+      transform: rotate(20deg);
+      transform-origin: right center;
+      border-left: 0.5rem solid transparent;
+      border-top: 0;
+      border-right: 0;
+      border-bottom: 0;
+      border-image: linear-gradient(
+        to bottom,
+        black 0%,
+        dimgray 50%,
+        black 100%
+      );
+      border-image-slice: 1;
+      background: linear-gradient(to bottom, grey 0%, white 50%, grey 100%);
+    }
   }
 
-  &_playing &__tonearm {
-    transform: rotate(-95deg + 40deg);
-    // transition-delay: ;
+  &_prepared &__tonearm {
+    transform: rotate($tonearm-playing-turn);
   }
 
   &_changing-record &__tonearm {
     z-index: 1;
   }
 
-  /*  &_playing  &__button {
-    pointer-events: none;
-  } */
-
   &__button {
     margin: 0;
     padding: 0;
-    border: none;
-    background: #333;
     overflow: hidden;
     border-radius: 0.25rem;
-    color: #666;
+    border: none;
+    color: #484848;
+    font-size: 0.7rem;
+    cursor: pointer;
+    box-shadow: 0 0 0.25rem 0.15rem rgba(black, 15%);
 
     @include utils.size(1.5rem);
+    @extend %conic-metal-texture;
 
-    &:enabled {
-      cursor: pointer;
+    &:disabled i {
+      opacity: 0.5;
     }
 
-    &:disabled {
-      opacity: 0.5;
+    .fa-play {
+      position: relative;
+      left: 0.0625rem;
     }
   }
 
@@ -112,8 +176,6 @@ $records-circle-radius-def: 2.6 * 18rem;
     top: math.div($player-height, 2) - $record-radius;
     margin: 0 0 0 -1 * $records-circle-radius-def;
     transform-origin: center;
-    // transition: rotate var(--change-record-animation-duration, 2s)
-    //   var(--change-record-animation-easing, ease-in-out);
     transition: transform var(--change-record-animation-duration, 2s)
       var(--change-record-animation-easing, ease-in-out);
     list-style: none;
@@ -124,32 +186,36 @@ $records-circle-radius-def: 2.6 * 18rem;
   }
 
   &__record {
-    // $record-size +
     transform-origin: center calc($records-circle-radius-def);
     margin-left: -1 * $record-radius;
     position: absolute;
     left: 50%;
+  }
 
-    // vinyl
-    &::before {
-      content: '';
-      display: block;
-      border-radius: 50%;
-      transform-origin: center;
-      background: linear-gradient(#000, #333);
-      box-shadow: 0 0 5px rgba($black, 75%);
-      animation: rotation 2s linear var(--tonearm-turn-duration) infinite paused;
-      will-change: rotate, scale, box-shadow;
-      transition: all 1.5s;
-      // animation: rotation 2s linear var(--tonearm-turn-duration) infinite;
+  &__record-vinyl {
+    border-radius: 50%;
+    transform-origin: center;
+    background:
+      repeating-conic-gradient(
+        from 45deg,
+        rgba(white, 15%) 0deg,
+        transparent 30deg 40%,
+        rgba(white, 15%) 180deg
+      ),
+      repeating-radial-gradient(
+        at center,
+        #131313,
+        #131313 0.12rem,
+        black 0.06rem,
+        black 0.15rem
+      );
+    box-shadow: 0 0 5px rgba($black, 75%);
+    will-change: rotate, scale, box-shadow;
+    // animation: rotation 2s linear var(--tonearm-turn-duration) infinite paused;
+    animation: rotation 2s linear infinite paused;
+    transition: all 1.5s;
 
-      @include utils.size(2 * $record-radius);
-    }
-
-    // TODO сборос положения пластинки
-    // &_settled::before {
-    //   rotate: 0deg;
-    // }
+    @include utils.size(2 * $record-radius);
   }
 
   &__playlist &__record {
@@ -164,15 +230,23 @@ $records-circle-radius-def: 2.6 * 18rem;
     }
   }
 
-  // vinyl
-  &_playing &__record_settled::before {
+  &_playing &__record_settled &__record-vinyl {
     animation-play-state: running;
   }
 
-  // vinyl
-  &_changing-record &__record::before {
+  &_changing-record &__record-vinyl {
     scale: 1.1;
     box-shadow: 0 0 20px rgba($black, 75%);
+  }
+
+  &__record-label {
+    opacity: 0.75;
+
+    @include utils.centered-circle($record-label-radius);
+
+    &::before {
+      @include utils.centered-circle($vinyl-hole, $black);
+    }
   }
 }
 
@@ -184,4 +258,39 @@ $records-circle-radius-def: 2.6 * 18rem;
   100% {
     rotate: 360deg;
   }
+}
+
+%conic-metal-texture {
+  background: conic-gradient(
+      #d7d7d7,
+      #c3c3c3,
+      #ccc,
+      #c6c6c6,
+      #d3d3d3,
+      #d8d8d8,
+      #d5d5d5,
+      #d8d8d8,
+      #d3d3d3,
+      #c5c5c5,
+      #c0c0c0,
+      #bfbfbf,
+      #d0d0d0,
+      #d9d9d9,
+      #d1d1d1,
+      #c5c5c5,
+      #c8c8c8,
+      #d7d7d7,
+      #d5d5d5,
+      #cdcdcd,
+      #c4c4c4,
+      #d9d9d9,
+      #cecece,
+      #c5c5c5,
+      #c5c5c5,
+      #cdcdcd,
+      #d8d8d8,
+      #d9d9d9,
+      #d7d7d7
+    )
+    content-box;
 }

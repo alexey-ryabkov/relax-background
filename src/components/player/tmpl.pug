@@ -9,18 +9,17 @@
     button.player__button.player__button_ctrl_prev(aria-label='назад')
       i.fa-solid.fa-backward-step(aria-hidden)
   ul.player__playlist
-    //- each track, i in playlist
-    each counter in [1, 2, 3, 4, 5, 6, 7, 8]
-      li(class=`player__record${counter === 1 ? ' player__record_settled' : ''}`)
-        audio(
-          src='assets/audio/Maarten Schellekens - Up from Here.mp3',
-          preload='metadata',
-          loop
-        ) 
-      li.player__record
-        audio(
-          src='assets/audio/Maarten Schellekens - Sweet Dreams - Middle-East Remix.mp3',
-          preload='metadata',
-          loop
-        ) 
+    each counter in [1, 2, 3, 4]
+      each track, i in playlist
+        -
+          const { audio, label, theme } = track;
+          const { color = 'black' } = theme;
+        li(
+          class=`player__record${counter === 1 && i === 0 ? ' player__record_settled' : ''}`
+        )
+          audio(src=`assets/audio/${audio}`, preload='metadata', loop)
+          .player__record-vinyl
+            .player__record-label(
+              style=`background: ${label ? `url('assets/images/${label}')` : color}`
+            )
   span.player__tonearm(aria-hidden)

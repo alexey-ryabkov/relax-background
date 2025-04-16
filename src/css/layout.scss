@@ -10,25 +10,27 @@ body {
   min-height: map.get($layout-breakpoints, min);
   font-family: $font-txt-family;
   color: $white;
-  background: linear-gradient(130deg, #123e66, #593273 41.07%, #623d45 76.05%);
+  // background: linear-gradient(130deg, #123e66, #593273 41.07%, #623d45 76.05%);
+  background: $black;
 }
 
 .page {
   $header-height: 10rem;
   $footer-height: 4rem;
 
+  display: flex;
   min-height: 100%;
 
   @include utils.box-stack;
 
-  &::before {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-  }
-
   &__header {
     padding: 0.75rem 1rem;
+    width: 100%;
+    min-height: $header-height;
+    flex-direction: column;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
     background: linear-gradient(
       177deg,
       rgb($black, 50%) 0,
@@ -36,7 +38,10 @@ body {
       rgb($white, 0%) $header-height
     );
 
-    @include utils.size(100%, $header-height);
+    @media (--layout-mf-sm) {
+      flex-direction: row;
+      justify-content: space-between;
+    }
   }
 
   &__logo {
@@ -45,7 +50,21 @@ body {
       sans-serif;
     text-transform: uppercase;
     letter-spacing: 0.2rem;
-    width: $header-height;
+    width: 100%;
+    flex: none;
+
+    @media (--layout-mf-sm) {
+      width: $header-height;
+      // width: 10rem;
+    }
+  }
+
+  &__app-status {
+    flex: 1;
+
+    @media (--layout-mf-sm) {
+      max-width: 50%;
+    }
   }
 
   &__logo-part {

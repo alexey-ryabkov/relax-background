@@ -1,8 +1,7 @@
 doctype html
 html(lang='ru')
   head
-    //- title #{ title }
-    title Relaxing background player
+    title #{ title }
     meta(name='viewport', content='width=device-width, initial-scale=1')/
     meta(name='theme-color', content='#000000')/
     //- link(rel='icon' type='image/png' href='images/favicon.png')/
@@ -12,14 +11,15 @@ html(lang='ru')
     link(href='css/index.scss', rel='stylesheet')/
     script(src='main.js', type='module', defer)
   body.page
+    - const { playlist } = locals;
     header.page__header
       .page__logo
-        .page__logo-part.page__logo-part_accent Relax
+        .page__logo-part.page__logo-part_accent.no-animation Relax
         .page__logo-part Background
+      .page__app-status
+        include components/status/tmpl
     main.page__workarea
       include components/visualizer/tmpl
       include components/player/tmpl
     footer.page__footer
-      a(
-        href='https://github.com/alexey-ryabkov/relax-background?tab=readme-ov-file'
-      ) О проекте
+      a(href=aboutLink) О проекте

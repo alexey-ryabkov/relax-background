@@ -93,6 +93,32 @@
   @include size(100vw, 100vh);
 }
 
+@mixin centered-circle($radius, $bg: null) {
+  content: '';
+  display: block;
+  position: absolute;
+  inset: 50% auto auto 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+
+  @if $bg {
+    background: $bg;
+  }
+
+  @include size(2 * $radius);
+}
+
+// @mixin vertical-skewed($skew: 10%) {
+//   clip-path: polygon(0% $skew, 100% 0%, 100% calc(100% - #{$skew}), 0% 100%);
+// }
+// @mixin vertical-skewed($angle: 10%) {
+//   clip-path: polygon($angle 0%, calc(100% - #{$angle}) 0%, 100% 100%, 0% 100%);
+// }
+
+// @mixin horizontal-skewed($angle: 10%) {
+//   clip-path: polygon(0% 0%, 100%, $angle 0%, 100% 100%, 0% 100%);
+// }
+
 @function capitalize-first($str) {
   @return string.to-upper-case(string.slice($str, 1, 1)) + string.slice($str, 2);
 }

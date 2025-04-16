@@ -6,8 +6,53 @@
   --change-record-animation-easing: ease-in-out;
 }
 
+@each $name, $breakpoint in $layout-breakpoints {
+  .hide-#{$name} {
+    @media (--layout-df-#{$name}) {
+      display: none !important;
+    }
+  }
+
+  .hide-up-#{$name} {
+    @media (--layout-mf-#{$name}) {
+      display: none !important;
+    }
+  }
+
+  .hide-visually-#{$name} {
+    @media (--layout-df-#{$name}) {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      border: 0;
+    }
+  }
+
+  .hide-visually-up-#{$name} {
+    @media (--layout-mf-#{$name}) {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      border: 0;
+    }
+  }
+}
+
 .fullscreened {
   @include utils.fullscreen;
+}
+
+.no-animation {
+  animation: none;
+  transition: none;
 }
 
 html {

@@ -1,0 +1,50 @@
+@use 'sass:map';
+@use '../../css/vars' as *;
+@use '../../css/custom-media';
+
+.status {
+  color: rgba($white, 50%);
+  font-weight: map.get($font-txt-weights, light);
+
+  @media (--layout-mf-sm) {
+    text-align: right;
+  }
+
+  &__title {
+    display: flex;
+    gap: 0.5rem;
+    align-items: baseline;
+
+    @media (--layout-mf-sm) {
+      justify-content: flex-end;
+    }
+  }
+
+  &__title-loader {
+    display: none;
+  }
+
+  &__title_loading &__title-loader {
+    display: initial;
+  }
+
+  &__track {
+    display: none;
+  }
+
+  &__track-title {
+    font-weight: map.get($font-txt-weights, medium);
+  }
+
+  &__track:has(&__track-title:not(:empty)) {
+    display: initial;
+  }
+
+  &__track-licence {
+    font-size: 0.75rem;
+
+    &:not(:empty)::before {
+      content: '\a9\a0'; // copyright sign
+    }
+  }
+}

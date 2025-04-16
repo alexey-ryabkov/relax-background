@@ -1,4 +1,7 @@
-import { delay } from 'lodash';
+import { delay, endsWith, flatMap, times, toNumber, trimEnd } from 'lodash';
+import playlist from '../playlist.json';
+
+const _FAKE_PLAYLIST_MULTIPLIER = 4;
 
 /**
  * @param {number} time
@@ -28,7 +31,6 @@ export function rotateElement(
   easing = 'ease-in-out',
 ) {
   const currentAngle = getRotation(element);
-  console.log('current angle', currentAngle, 'new angle', angle);
   if (duration) {
     return element.animate(
       [
@@ -41,7 +43,6 @@ export function rotateElement(
       },
     ).finished;
   } else {
-    // element.style.rotate = `${currentAngle + angle}deg`;
     element.style.transform = `rotate(${currentAngle + angle}deg)`;
     return cssAnimation(element, 'transition');
   }
@@ -53,7 +54,6 @@ export function rotateElement(
  */
 export function getRotation(element) {
   const { transform } = window.getComputedStyle(element);
-  console.log('transform matrix', transform);
   if (transform === 'none') return 0;
   const matrix = transform
     .split('(')[1]
@@ -75,20 +75,24 @@ export const cssAnimation = (element, type = 'animation') => {
   });
 };
 
-// /**
-//  * @param {HTMLElement} element
-//  * @returns {number}
-//  */
-// function getRotation(element) {
-//   const transform = window.getComputedStyle(element).transform;
-//   if (transform === 'none') return 0;
+/**
+ * @returns {Playlist}
+ */
+export const getPlaylist = () =>
+  flatMap(times(_FAKE_PLAYLIST_MULTIPLIER), () => playlist);
 
-//   const matrix = transform.match(/^matrix\((.+)\)$/);
-//   if (!matrix) return 0;
+/**
+ * @param {number} trackNum
+ * @returns {Track|null}
+ */
+export const getTrack = (trackNum) => getPlaylist()[trackNum] ?? null;
 
-//   const values = matrix[1].split(', ');
-//   const a = parseFloat(values[0]);
-//   const b = parseFloat(values[1]);
-
-//   return Math.round(Math.atan2(b, a) * (180 / Math.PI));
-// }
+/**
+ * @param {string} str
+ * @returns number
+ */
+export const parseAnimationTime = (str) => {
+  if (endsWith(str, 'ms')) return toNumber(trimEnd(str, 'ms'));
+  if (endsWith(str, 's')) return toNumber(trimEnd(str, 's')) * 1_000;
+  return 0;
+};

@@ -2,6 +2,7 @@
   "compilerOptions": {
     "allowJs": true,
     "checkJs": true,
+    "lib": ["es2024", "dom"],
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "esModuleInterop": true,

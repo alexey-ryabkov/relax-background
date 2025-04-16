@@ -1,62 +1,14 @@
-/* stylelint-disable selector-class-pattern */
-/* stylelint-disable custom-media-pattern */
+/* stylelint-disable at-rule-empty-line-before */
 @use 'vars' as *;
+@use 'custom-media';
 @use 'utils';
-
-// "mobile first" custom media query names
-@each $name, $breakpoint in $layout-breakpoints {
-  @custom-media --layout-mf-#{$name} screen and (width >= #{$breakpoint});
-}
-// "desktop first" custom media query names
-@each $name, $breakpoint in $layout-breakpoints {
-  @custom-media --layout-df-#{$name} screen and (width < #{$breakpoint});
-}
-
-@each $name, $breakpoint in $layout-breakpoints {
-  .hide-#{$name} {
-    @media (--layout-df-#{$name}) {
-      display: none !important;
-    }
-  }
-
-  .hide-up-#{$name} {
-    @media (--layout-mf-#{$name}) {
-      display: none !important;
-    }
-  }
-
-  .hide-visually-#{$name} {
-    @media (--layout-df-#{$name}) {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      border: 0;
-    }
-  }
-
-  .hide-visually-up-#{$name} {
-    @media (--layout-mf-#{$name}) {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      border: 0;
-    }
-  }
-}
 
 @include utils.gen-font-faces(
   $font-txt-family,
   $font-txt-weights,
   ('woff2', 'ttf')
 );
+
 @include utils.font-face(
   $font-accent-family,
   '../assets/fonts/#{$font-accent-family}',

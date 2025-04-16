@@ -1,8 +1,8 @@
-import { castArray, isUndefined } from 'lodash';
 import EventEmitter from './EventEmitter';
 
 /**
  * @abstract
+ * @implements {Eventful}
  */
 export default class Component {
   /** @type HTMLElement */
@@ -11,6 +11,7 @@ export default class Component {
   _name;
   _emitter = new EventEmitter();
 
+  // FIXME oO проще явно прописать методы эмиттера
   /** @type EventHandlerMethod */
   // @ts-ignore method initialized in constructor
   on;

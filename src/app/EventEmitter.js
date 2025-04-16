@@ -1,3 +1,6 @@
+/**
+ * @implements {Eventful}
+ */
 export default class EventEmitter {
   /** @type Events */
   _events = {};
